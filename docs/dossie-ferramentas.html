@@ -183,7 +183,7 @@ html { scroll-behavior: smooth; }
   <div class="capa-inner">
     <span class="eyebrow">Colatina do Futuro · Dossiê técnico · novembro de 2026</span>
     <h1>Ferramentas e conceitos para o simulador de trânsito</h1>
-    <p>O que usar, o que estudar e quais intervenções testar para que o simulador 3D seja verossímil e sirva de apoio real à Prefeitura de Colatina, com foco na redução de mortes no trânsito.</p>
+    <p>Ferramentas, conceitos e intervenções que tornam o simulador 3D verossímil e capaz de servir de apoio real à Prefeitura de Colatina, com foco na redução de mortes no trânsito.</p>
     <span class="meta">Repositório: github.com/klitzq/colatina-do-futuro</span>
   </div>
 </header>
@@ -223,12 +223,12 @@ html { scroll-behavior: smooth; }
           <thead><tr><th>Camada</th><th>Recomendação</th><th>Alternativas</th><th>Por quê</th></tr></thead>
           <tbody>
             <tr><td>Motor de simulação</td><td><strong>Eclipse SUMO</strong> + TraCI/libsumo (Python)</td><td>MATSim, PTV Vissim, Aimsun</td><td>Livre, usado em pesquisa e por órgãos públicos, importa OpenStreetMap, simula semáforos, pedestres, bicicletas, veículos de emergência, conflitos e emissões.</td></tr>
-            <tr><td>Mapa e 3D</td><td><strong>Mapbox GL JS v3</strong> + <strong>deck.gl</strong> (frotas) + <strong>three.js</strong> (cenas detalhadas)</td><td>MapLibre GL, CesiumJS</td><td>Você já domina Mapbox; deck.gl desenha milhares de veículos com desempenho; three.js entra para modelos próximos (viaturas, semáforos, bloqueios).</td></tr>
+            <tr><td>Mapa e 3D</td><td><strong>Mapbox GL JS v3</strong> + <strong>deck.gl</strong> (frotas) + <strong>three.js</strong> (cenas detalhadas)</td><td>MapLibre GL, CesiumJS</td><td>O Mapbox oferece mapa 3D, terreno e APIs de rotas, isócronas e tráfego; o deck.gl desenha milhares de veículos com desempenho; three.js entra para modelos próximos (viaturas, semáforos, bloqueios).</td></tr>
             <tr><td>Rede viária</td><td><strong>OpenStreetMap</strong> corrigido em campo</td><td>Base cadastral da Prefeitura</td><td>Gratuito e editável. Faixas, mãos de direção e semáforos precisam ser conferidos em Colatina.</td></tr>
             <tr><td>Banco de dados</td><td><strong>PostgreSQL + PostGIS</strong> (+ índice H3)</td><td>SQLite/SpatiaLite no protótipo</td><td>Consultas espaciais (acidentes por trecho, raio de cobertura de viaturas, zonas críticas).</td></tr>
             <tr><td>Análise e otimização</td><td><strong>Python</strong>: OSMnx, GeoPandas, PySAL, OR-Tools</td><td>R (sf, spdep)</td><td>Pontos críticos de acidentes, alocação de equipes, rotas de ronda.</td></tr>
             <tr><td>Painel da Prefeitura</td><td><strong>Next.js</strong> (o projeto atual)</td><td>—</td><td>Já estruturado em camadas; vira o painel de cenários, resultados e relatórios.</td></tr>
-            <tr><td>App de campo (Guarda)</td><td><strong>Flutter</strong> + geolocator + Socket.IO</td><td>PWA</td><td>Mesmo padrão dos seus apps ASCCOR e Teus'Corres: posição das equipes em tempo real alimenta o painel.</td></tr>
+            <tr><td>App de campo (Guarda)</td><td><strong>Flutter</strong> + geolocator + Socket.IO</td><td>PWA</td><td>Aplicativo multiplataforma que envia a posição das equipes em tempo real ao painel.</td></tr>
           </tbody>
         </table>
       </div>
@@ -375,7 +375,7 @@ html { scroll-behavior: smooth; }
         </div>
         <div class="ferramenta">
           <div class="nome"><h4>PTV Vissim / Aimsun</h4><div><span class="selo alt">referência de mercado</span><span class="selo pago">licença paga</span></div></div>
-          <div class="desc"><p>Usados por consultorias e grandes prefeituras. Vale conhecer a terminologia e os relatórios que produzem, porque é o que um técnico de trânsito espera ver. Não são necessários para o projeto.</p></div>
+          <div class="desc"><p>Usados por consultorias e grandes prefeituras. Sua terminologia e seus relatórios são a referência esperada por técnicos de trânsito, mas essas ferramentas não são necessárias ao projeto.</p></div>
         </div>
         <div class="ferramenta">
           <div class="nome"><h4>CityFlow / SUMO-RL</h4><div><span class="selo alt">pesquisa</span><span class="selo livre">livre</span></div></div>
@@ -383,7 +383,7 @@ html { scroll-behavior: smooth; }
         </div>
         <div class="ferramenta">
           <div class="nome"><h4>Simulação própria em JS</h4><div><span class="selo alt">só para demonstração</span></div></div>
-          <div class="desc"><p>Implementar o modelo IDM num Web Worker é ótimo para aprender e para demonstrações interativas leves. Não use como base dos resultados entregues à Prefeitura: sem validação, os números não se sustentam numa discussão técnica.</p></div>
+          <div class="desc"><p>Uma implementação própria do modelo IDM num Web Worker atende a fins didáticos e a demonstrações interativas leves. Não é indicada como base dos resultados entregues à Prefeitura: sem validação, os números não se sustentam numa discussão técnica.</p></div>
         </div>
       </div>
 
@@ -393,7 +393,7 @@ html { scroll-behavior: smooth; }
           <div class="nome"><h4>Mapbox GL JS v3</h4><div><span class="selo rec">recomendado</span><span class="selo pago">gratuito até a cota</span></div></div>
           <div class="desc">
             <p>Base do mapa: estilo <strong>Standard</strong> com prédios 3D e iluminação por hora do dia (útil para cenas noturnas, já que quase metade dos acidentes no ES ocorre à noite), <strong>terreno</strong> (relevo do vale do Rio Doce) e <strong>custom layers</strong> para desenhar com WebGL/three.js.</p>
-            <p>APIs úteis: <strong>Directions</strong> (perfil <code>driving-traffic</code>), <strong>Matrix</strong> (tempos entre muitos pontos), <strong>Isochrone</strong> (área alcançável por uma viatura ou ambulância em X minutos), <strong>Map Matching</strong> (ajustar trajetos GPS das equipes às ruas) e o tileset <strong>Mapbox Traffic</strong> (níveis de congestionamento). Confira os preços por carregamento de mapa e por requisição antes de abrir o painel ao público.</p>
+            <p>APIs úteis: <strong>Directions</strong> (perfil <code>driving-traffic</code>), <strong>Matrix</strong> (tempos entre muitos pontos), <strong>Isochrone</strong> (área alcançável por uma viatura ou ambulância em X minutos), <strong>Map Matching</strong> (ajustar trajetos GPS das equipes às ruas) e o tileset <strong>Mapbox Traffic</strong> (níveis de congestionamento). Os preços por carregamento de mapa e por requisição precisam ser avaliados antes da abertura do painel ao público.</p>
           </div>
         </div>
         <div class="ferramenta">
@@ -402,7 +402,7 @@ html { scroll-behavior: smooth; }
         </div>
         <div class="ferramenta">
           <div class="nome"><h4>three.js</h4><div><span class="selo rec">para cenas detalhadas</span><span class="selo livre">livre</span></div></div>
-          <div class="desc"><p>Para o "modo cena": aproximar um cruzamento e ver semáforos mudando, uma viatura posicionando um bloqueio, uma faixa elevada de pedestres. Integra-se ao Mapbox por custom layer (a biblioteca comunitária Threebox ajuda nisso) ou numa cena própria. Estude <code>InstancedMesh</code> (muitos objetos iguais com uma chamada de desenho), carregamento de glTF e sistemas de coordenadas (Mercator para metros).</p></div>
+          <div class="desc"><p>Para o "modo cena": aproximar um cruzamento e ver semáforos mudando, uma viatura posicionando um bloqueio, uma faixa elevada de pedestres. Integra-se ao Mapbox por custom layer (a biblioteca comunitária Threebox ajuda nisso) ou numa cena própria. Os recursos centrais para esse uso são <code>InstancedMesh</code> (muitos objetos iguais com uma chamada de desenho), o carregamento de modelos glTF e a conversão de coordenadas (Mercator para metros).</p></div>
         </div>
         <div class="ferramenta">
           <div class="nome"><h4>MapLibre GL JS</h4><div><span class="selo alt">alternativa</span><span class="selo livre">livre</span></div></div>
@@ -410,7 +410,7 @@ html { scroll-behavior: smooth; }
         </div>
         <div class="ferramenta">
           <div class="nome"><h4>CesiumJS + 3D Tiles</h4><div><span class="selo alt">alternativa</span></div></div>
-          <div class="desc"><p>Globo 3D com terreno preciso e suporte a malhas fotorrealistas (como os Photorealistic 3D Tiles do Google). Visualmente impressionante, mas a cobertura de Colatina precisa ser conferida, e há termos de uso e custos. Considere só se o realismo visual for prioridade.</p></div>
+          <div class="desc"><p>Globo 3D com terreno preciso e suporte a malhas fotorrealistas (como os Photorealistic 3D Tiles do Google). Visualmente impressionante, mas a cobertura de Colatina precisa ser conferida, e há termos de uso e custos. É uma opção indicada quando o realismo visual for prioridade.</p></div>
         </div>
       </div>
 
@@ -445,8 +445,8 @@ html { scroll-behavior: smooth; }
           <div class="desc"><p>Otimização para a fiscalização: onde posicionar equipes para cobrir o máximo de pontos críticos (problema de cobertura máxima), como montar rondas (roteamento de veículos com janelas de tempo) e escalas por turno.</p></div>
         </div>
         <div class="ferramenta">
-          <div class="nome"><h4>Flutter + geolocator + Socket.IO</h4><div><span class="selo rec">você já usa</span></div></div>
-          <div class="desc"><p>App da Guarda com a posição das equipes em tempo real, como no app do motoca do Teus'Corres. No painel, as viaturas reais aparecem junto com a simulação, e as ocorrências registradas em campo alimentam a base de acidentes.</p></div>
+          <div class="nome"><h4>Flutter + geolocator + Socket.IO</h4><div><span class="selo rec">app de campo</span></div></div>
+          <div class="desc"><p>Aplicativo da Guarda Municipal com a posição das equipes em tempo real. No painel, as viaturas reais aparecem junto com a simulação, e as ocorrências registradas em campo alimentam a base de acidentes.</p></div>
         </div>
         <div class="ferramenta">
           <div class="nome"><h4>Visão computacional</h4><div><span class="selo alt">fase avançada</span></div></div>
@@ -458,7 +458,7 @@ html { scroll-behavior: smooth; }
     <!-- 05 -->
     <section id="dados">
       <h2><span class="n">05</span>Fontes de dados</h2>
-      <p>Sem dados de Colatina, o simulador é só uma animação. A calibração é o que dá credibilidade. Liste, peça e documente cada fonte.</p>
+      <p>Sem dados de Colatina, o simulador é só uma animação. A calibração é o que dá credibilidade. Cada fonte precisa ser listada, solicitada formalmente e documentada.</p>
       <div class="tabela">
         <table>
           <thead><tr><th>Fonte</th><th>O que fornece</th><th>Uso no projeto</th></tr></thead>
@@ -514,8 +514,8 @@ html { scroll-behavior: smooth; }
       <h3>Calibração e validação</h3>
       <ul>
         <li><strong>Estatística GEH:</strong> compara volumes simulados e contados. A regra prática é GEH &lt; 5 em pelo menos 85% dos pontos de contagem.</li>
-        <li><strong>Separar dados de calibração e de validação:</strong> ajuste o modelo com um conjunto e confira com outro (por exemplo, outro dia ou outro horário).</li>
-        <li><strong>Várias rodadas com sementes aleatórias:</strong> uma simulação microscópica é estocástica. Relate média e intervalo, nunca uma rodada só.</li>
+        <li><strong>Separar dados de calibração e de validação:</strong> o modelo é ajustado com um conjunto de dados e conferido com outro (por exemplo, outro dia ou outro horário).</li>
+        <li><strong>Várias rodadas com sementes aleatórias:</strong> uma simulação microscópica é estocástica. Os resultados são apresentados com média e intervalo, nunca a partir de uma rodada só.</li>
       </ul>
     </section>
 
@@ -551,7 +551,7 @@ html { scroll-behavior: smooth; }
     <!-- 08 -->
     <section id="indice-pontuacao">
       <h2><span class="n">08</span>Índice de pontuação proposto</h2>
-      <p>A "pontuação calculada de maneira inteligente" precisa ser transparente: cada componente tem uma métrica conhecida, e o cenário atual (calibrado) vale 100. Um cenário acima de 100 é melhor que hoje.</p>
+      <p>A pontuação do simulador precisa ser transparente: cada componente tem uma métrica conhecida, e o cenário atual (calibrado) vale 100. Um cenário acima de 100 é melhor que hoje.</p>
       <div class="formula">ÍNDICE = 0,40·Segurança + 0,25·Mobilidade + 0,15·Emergência + 0,10·Pedestres e ciclistas + 0,10·Ambiente
 
 cada componente = 100 × (valor do cenário base ÷ valor do cenário testado)   ← para métricas em que menor é melhor
@@ -576,7 +576,7 @@ TRAVA DE SEGURANÇA: se Segurança &lt; 100, ÍNDICE = min(ÍNDICE, 99)</div>
     <!-- 09 -->
     <section id="legislacao">
       <h2><span class="n">09</span>Legislação e competências</h2>
-      <p>O simulador só gera propostas viáveis se respeitar quem pode fazer o quê. Isto é um resumo para estudo, não um parecer jurídico: confira o texto vigente de cada norma.</p>
+      <p>O simulador só gera propostas viáveis se respeitar quem pode fazer o quê. Este quadro é um resumo de referência, não um parecer jurídico; o texto vigente de cada norma deve ser conferido.</p>
       <div class="tabela">
         <table>
           <thead><tr><th>Norma</th><th>Ponto relevante</th><th>Efeito no projeto</th></tr></thead>
@@ -601,7 +601,7 @@ TRAVA DE SEGURANÇA: se Segurança &lt; 100, ÍNDICE = min(ÍNDICE, 99)</div>
       </div>
       <div class="nota alerta">
         <strong>Ressalva sobre a Resolução 996/2023</strong>
-        <p>Há questionamentos em curso sobre partes da norma, como uma ação civil pública divulgada pela Aliança Bike em 2026. Verifique a situação vigente antes de desenhar incentivos.</p>
+        <p>Há questionamentos em curso sobre partes da norma, como uma ação civil pública divulgada pela Aliança Bike em 2026. A situação vigente deve ser verificada antes do desenho de incentivos.</p>
       </div>
     </section>
 
@@ -617,7 +617,7 @@ TRAVA DE SEGURANÇA: se Segurança &lt; 100, ÍNDICE = min(ÍNDICE, 99)</div>
           <tbody>
             <tr><td>Zona 30 perto de escolas, hospitais e no Centro</td><td>Reduzir <code>maxSpeed</code> das vias; aumentar a aderência dos motoristas ao limite (<code>speedFactor</code>)</td><td>Conflitos com pedestres, risco de Nilsson, impacto no tempo de viagem (geralmente pequeno)</td></tr>
             <tr><td>Moderação de tráfego (lombadas, plataformas elevadas, estreitamentos, chicanas)</td><td>Trechos com velocidade máxima reduzida; geometria alterada na rede</td><td>Velocidade no percentil 85</td></tr>
-            <tr><td>Radares fixos e móveis</td><td>Na área de influência do radar, motoristas reduzem a velocidade; fora dela, voltam. Modele o "efeito canguru"</td><td>Extensão do trecho realmente controlado</td></tr>
+            <tr><td>Radares fixos e móveis</td><td>Na área de influência do radar, motoristas reduzem a velocidade; fora dela, voltam. O modelo inclui o "efeito canguru"</td><td>Extensão do trecho realmente controlado</td></tr>
             <tr><td>Onda verde a 40–50 km/h</td><td>Defasagem dos semáforos via TraCI</td><td>Paradas, velocidade média, excesso de velocidade entre semáforos</td></tr>
             <tr><td>Painéis educativos de velocidade</td><td>Redução moderada do <code>speedFactor</code> no trecho (parâmetro a calibrar com a literatura)</td><td>Velocidade antes e depois</td></tr>
           </tbody>
@@ -682,7 +682,7 @@ TRAVA DE SEGURANÇA: se Segurança &lt; 100, ÍNDICE = min(ÍNDICE, 99)</div>
         <li><strong>Fiscalizar onde e quando o risco está:</strong> no ES, quase metade dos acidentes ocorre à noite, e sábados e domingos somam 37%. Operações de alcoolemia e velocidade devem seguir esse padrão, e não o horário comercial.</li>
         <li><strong>Pontos críticos priorizados por estatística</strong> (seção 07), não por percepção.</li>
         <li><strong>Imprevisibilidade:</strong> blitz em lugares e horários sempre iguais é contornada. A literatura de "jogos de segurança" (Stackelberg security games, usados no aeroporto de Los Angeles no sistema ARMOR) mostra como sortear posições ponderadas pelo risco.</li>
-        <li><strong>Efeito de dissuasão visível:</strong> presença ostensiva em trechos de contramão e ultrapassagem reduz o comportamento de risco; modele isso como redução da agressividade na área de influência.</li>
+        <li><strong>Efeito de dissuasão visível:</strong> presença ostensiva em trechos de contramão e ultrapassagem reduz o comportamento de risco; esse efeito é modelado como redução da agressividade na área de influência.</li>
         <li><strong>Operações integradas:</strong> Guarda Municipal nas vias municipais, PRF na BR-259, PM e Detran nas operações de alcoolemia, com escala e comunicação comuns.</li>
       </ul>
       <h3>O que testar</h3>
@@ -723,7 +723,7 @@ TRAVA DE SEGURANÇA: se Segurança &lt; 100, ÍNDICE = min(ÍNDICE, 99)</div>
     <!-- 14 -->
     <section id="trilha">
       <h2><span class="n">14</span>Trilha de estudo</h2>
-      <p>Em ordem, do que destrava o protótipo ao que sustenta a entrega para a Prefeitura.</p>
+      <p>Sequência de estudo recomendada para a equipe do projeto, do que viabiliza o protótipo ao que sustenta a entrega para a Prefeitura.</p>
       <ol class="trilha">
         <li><div><h4>Fundamentos de tráfego</h4><p>Diagrama fundamental, capacidade, nível de serviço, matriz O-D. Livro: <em>Traffic Flow Dynamics</em> (Treiber e Kesting), que também explica o IDM. Complementar: Manual de Estudos de Tráfego do DNIT.</p></div></li>
         <li><div><h4>SUMO na prática</h4><p>Tutoriais oficiais: osmWebWizard, netconvert, rotas, TraCI em Python, dispositivos SSM e bluelight, saídas FCD e de detectores.</p></div></li>
@@ -741,11 +741,11 @@ TRAVA DE SEGURANÇA: se Segurança &lt; 100, ÍNDICE = min(ÍNDICE, 99)</div>
     <section id="riscos">
       <h2><span class="n">15</span>Riscos e cuidados</h2>
       <ul>
-        <li><strong>Simulação não é previsão exata.</strong> Apresente intervalos e compare cenários entre si, sempre contra um base calibrado.</li>
+        <li><strong>Simulação não é previsão exata.</strong> Os resultados trazem intervalos e comparam cenários entre si, sempre contra um cenário base calibrado.</li>
         <li><strong>Dados incompletos do OSM</strong> (faixas, semáforos, mão de direção) geram filas falsas. Conferência em campo é obrigatória.</li>
-        <li><strong>Calibração fraca derruba a credibilidade.</strong> Publique a metodologia e o GEH junto dos resultados.</li>
-        <li><strong>Custos de APIs</strong> (Mapbox, Google) crescem com o uso público. Tenha o MapLibre como plano B e cache de rotas.</li>
-        <li><strong>LGPD:</strong> anonimizar placas e rostos; guardar só o necessário; definir finalidade e prazo de retenção.</li>
+        <li><strong>Calibração fraca derruba a credibilidade.</strong> A metodologia e o GEH acompanham os resultados publicados.</li>
+        <li><strong>Custos de APIs</strong> (Mapbox, Google) crescem com o uso público. O MapLibre e o cache de rotas funcionam como alternativa de contenção.</li>
+        <li><strong>LGPD:</strong> placas e rostos são anonimizados, só o necessário é armazenado, e a finalidade e o prazo de retenção ficam definidos.</li>
         <li><strong>Viés e equidade:</strong> otimizar só tempo de carro pode piorar a vida de quem anda a pé ou de ônibus, geralmente a população de menor renda. O índice já inclui pedestres e ciclistas por isso.</li>
         <li><strong>Desempenho no navegador:</strong> milhares de veículos exigem instanciação (deck.gl, InstancedMesh) e trajetórias pré-calculadas, nunca a simulação inteira no cliente.</li>
         <li><strong>Expectativa institucional:</strong> o simulador apoia a decisão técnica; não substitui estudo de engenharia assinado por profissional habilitado quando a norma exige.</li>
@@ -778,7 +778,7 @@ TRAVA DE SEGURANÇA: se Segurança &lt; 100, ÍNDICE = min(ÍNDICE, 99)</div>
         <li><a href="https://threejs.org/docs/" target="_blank" rel="noopener">three.js: documentação</a></li>
         <li><a href="https://www.who.int/teams/social-determinants-of-health/safety-and-mobility/decade-of-action-for-road-safety-2021-2030" target="_blank" rel="noopener">OMS: Década de Ação pela Segurança no Trânsito 2021–2030</a></li>
       </ol>
-      <p class="fonte">Conceitos técnicos (modelos de tráfego, Webster, Nilsson, GEH, SSAM, Empirical Bayes) vêm da literatura clássica de engenharia de tráfego e não de uma fonte única; use a trilha de estudo para chegar às referências originais.</p>
+      <p class="fonte">Conceitos técnicos (modelos de tráfego, Webster, Nilsson, GEH, SSAM, Empirical Bayes) vêm da literatura clássica de engenharia de tráfego e não de uma fonte única; a trilha de estudo indica as referências originais.</p>
     </section>
   </main>
 </div>

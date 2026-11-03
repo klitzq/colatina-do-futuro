@@ -14,7 +14,7 @@
 
 ### Apresentação
 
-Meu nome é João Victor Klitzke e moro em Colatina, cidade de médio porte do Noroeste do Espírito Santo. Cresci aqui e ainda vivo aqui. Isso me permitiu conhecer de perto problemas estruturais e sociais que só aparecem para quem vive o dia a dia da cidade.
+O projeto é idealizado por João Victor Klitzke, morador de Colatina, cidade de médio porte do Noroeste do Espírito Santo. O autor cresceu na cidade e ainda vive nela, o que lhe permitiu conhecer de perto problemas estruturais e sociais que só aparecem para quem vive o dia a dia do município.
 
 Colatina é uma cidade bonita, conhecida como a *Princesinha do Norte* e famosa pelo pôr do sol. Essa beleza, porém, fica em segundo plano diante de um problema central: **o trânsito**.
 
@@ -31,7 +31,7 @@ Hoje, uma mudança no trânsito só pode ser avaliada depois de feita nas ruas, 
 
 ### Proposta
 
-Este projeto apresenta uma proposta de intervenção: um **simulador de trânsito** que faz parte de uma série de projetos que, com otimismo, chamei de *Colatina do Futuro*.
+Este projeto apresenta uma proposta de intervenção: um **simulador de trânsito** que integra uma série de projetos que o autor, com otimismo, chamou de *Colatina do Futuro*.
 
 O simulador vai reproduzir a cidade em um modelo 3D para comparar cenários e medidas, como:
 
@@ -55,9 +55,9 @@ O objetivo é oferecer à Prefeitura de Colatina uma **ferramenta de apoio à de
 
 > Colatina's traffic grew alongside a city that was never planned for it. **Colatina do Futuro** (*Colatina of the Future*) proposes a 3D simulator of the city to test measures such as route changes, smart traffic lights and new crosswalks before applying them on the streets. An efficiency score measures the result of each scenario and helps City Hall make data-driven decisions.
 
-### About me
+### About the author
 
-My name is João Victor Klitzke, and I live in Colatina, a mid-sized city in northwestern Espírito Santo, Brazil. I grew up here and still live here, which let me see up close structural and social problems that only show up to those who experience the city every day.
+The project is conceived by João Victor Klitzke, a resident of Colatina, a mid-sized city in northwestern Espírito Santo, Brazil. The author grew up in the city and still lives there, which gave him a close view of structural and social problems that only show up to those who experience the city every day.
 
 Colatina is a beautiful city, known as the *Princesinha do Norte* ("Little Princess of the North") and famous for its sunsets. That beauty, however, takes a back seat to one central problem: **traffic**.
 
@@ -74,7 +74,7 @@ Today, a traffic change can only be evaluated after it is made on the streets, a
 
 ### Proposal
 
-This project is an intervention proposal: a **traffic simulator** that is part of a series of projects I optimistically named *Colatina do Futuro*.
+This project is an intervention proposal: a **traffic simulator** that is part of a series of projects the author optimistically named *Colatina do Futuro*.
 
 The simulator will reproduce the city as a 3D model to compare scenarios and measures, such as:
 
@@ -94,7 +94,7 @@ The goal is to offer Colatina City Hall a **decision-support tool** for data-dri
 
 ## Documentação
 
-- [Dossiê de ferramentas e conceitos](docs/dossie-ferramentas.html): ferramentas de simulação e 3D, conceitos de tráfego e segurança viária, legislação, intervenções, índice de pontuação e trilha de estudo. Baixe o arquivo e abra no navegador, ou veja pelo [visualizador de HTML](https://htmlpreview.github.io/?https://github.com/klitzq/colatina-do-futuro/blob/main/docs/dossie-ferramentas.html).
+- [Dossiê de ferramentas e conceitos](docs/dossie-ferramentas.html): ferramentas de simulação e 3D, conceitos de tráfego e segurança viária, legislação, intervenções, índice de pontuação e trilha de estudo. O arquivo pode ser aberto diretamente no navegador ou consultado pelo [visualizador de HTML](https://htmlpreview.github.io/?https://github.com/klitzq/colatina-do-futuro/blob/main/docs/dossie-ferramentas.html).
 
 ---
 
@@ -133,7 +133,7 @@ src/
       tipos/paginacao.ts            Paginacao, Paginado, normalizarPaginacao
       modulo/uma-vez.ts             singleton preguiçoso da composition root
     modulos/
-      bairro/                       módulo de exemplo: copie esta estrutura
+      bairro/                       módulo de exemplo, modelo para os demais módulos
 test/
   fabricas/                     dados de teste válidos por padrão (Test Data Builder)
   contratos/                    testes que toda implementação de Repositorio deve passar
@@ -156,23 +156,24 @@ route.ts → Controller → CasoDeUso → Service (regras puras) + Repository �
 
 Os erros de `nucleo/erros` viram resposta `{ statusCode, message }`, no mesmo formato dos backends NestJS.
 
-### Criando um módulo novo
+### Composição de um módulo
 
-1. Copie `src/servidor/modulos/bairro` para `modulos/<nome>` e renomeie os arquivos:
-   `<nome>.types.ts`, `<nome>.model.ts`, `<nome>.repository.ts`, `<nome>.service.ts`,
-   `casos-de-uso/<acao>-<nome>.caso-de-uso.ts`, `<nome>.controller.ts`, `<nome>.modulo.ts`.
-2. Um caso de uso por regra de negócio, cada um com o seu `.spec.ts` ao lado.
-3. Crie `test/fabricas/<nome>.fabrica.ts`.
-4. Exponha em `src/app/api/<recurso>/route.ts` (`export const GET = controlador.listar`).
-5. No front: `_types/<nome>.ts` e `_services/<nome>.ts` (herdando `ServicoCrud`).
+Cada módulo segue a estrutura do módulo de exemplo `src/servidor/modulos/bairro`:
+
+1. Arquivos por camada: `<nome>.types.ts`, `<nome>.model.ts`, `<nome>.repository.ts`, `<nome>.service.ts`,
+   `casos-de-uso/<acao>-<nome>.caso-de-uso.ts`, `<nome>.controller.ts` e `<nome>.modulo.ts`.
+2. Um caso de uso por regra de negócio, cada um acompanhado do seu `.spec.ts`.
+3. Uma fábrica de dados de teste em `test/fabricas/<nome>.fabrica.ts`.
+4. As rotas expostas em `src/app/api/<recurso>/route.ts` (`export const GET = controlador.listar`).
+5. No frontend, `_types/<nome>.ts` e `_services/<nome>.ts`, este último herdando `ServicoCrud`.
 
 ### Padrão de testes
 
-- Arquivo `*.spec.ts` ao lado do que testa.
+- Cada arquivo `*.spec.ts` fica ao lado do código que testa.
 - **Caso de uso:** `preparar()` monta o caso de uso com repositório em memória; um `describe('Regra: ...')` por regra; `it('deve ...')` por cenário; corpo em Dado / Quando / Então; erros com `esperarErro(() => ..., ErroDeConflito)`.
 - **Repository:** `testarContratoDoRepositorio(...)` mais os testes das consultas próprias. Quando houver banco, a implementação real roda o mesmo contrato.
-- **Controller:** integração HTTP com `chamarRota(controlador.acao, {...})`. Confere só status e formato; as regras já estão cobertas nos casos de uso.
+- **Controller:** integração HTTP com `chamarRota(controlador.acao, {...})`. Verifica apenas status e formato das respostas, pois as regras já estão cobertas nos casos de uso.
 
 ### Banco de dados
 
-Ainda não há banco: `bairro.modulo.ts` usa `BairroRepositoryEmMemoria`. Para usar um banco, crie a implementação (ex.: `BairroRepositoryPrisma implements BairroRepository`), rode nela o mesmo contrato de testes e troque a instância em `criarModuloBairro`.
+Nesta fase, o projeto não utiliza banco de dados: `bairro.modulo.ts` usa `BairroRepositoryEmMemoria`. A adoção de um banco consiste em criar uma nova implementação do repositório (por exemplo, `BairroRepositoryPrisma implements BairroRepository`), submetê-la ao mesmo contrato de testes e substituir a instância em `criarModuloBairro`.
