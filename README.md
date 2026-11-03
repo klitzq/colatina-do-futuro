@@ -92,6 +92,12 @@ The goal is to offer Colatina City Hall a **decision-support tool** for data-dri
 
 ---
 
+## Documentação
+
+- [Dossiê de ferramentas e conceitos](docs/dossie-ferramentas.html): ferramentas de simulação e 3D, conceitos de tráfego e segurança viária, legislação, intervenções, índice de pontuação e trilha de estudo. Baixe o arquivo e abra no navegador, ou veja pelo [visualizador de HTML](https://htmlpreview.github.io/?https://github.com/klitzq/colatina-do-futuro/blob/main/docs/dossie-ferramentas.html).
+
+---
+
 ## Estrutura técnica
 
 Next.js 16 (App Router) com o backend no próprio projeto (`src/app/api`), organizado em camadas com classes abstratas genéricas.

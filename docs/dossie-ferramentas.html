@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dossiê Colatina do Futuro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dossiê técnico de leitura longa. Índice fixo à esquerda no desktop, coluna única no celular.
+   Identidade inspirada em sinalização viária: amarelo de faixa, asfalto, vermelho de advertência. */
+:root {
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --fg: #1d2126;
+  --muted: #5b626b;
+  --line: #dcd9d0;
+  --asphalt: #2a2f36;
+  --accent: #b88a00;        /* amarelo de faixa, escurecido para ler sobre claro */
+  --accent-soft: #f3e7b8;
+  --danger: #b3261e;
+  --danger-soft: #f7dcd9;
+  --ok: #2e6b3f;
+  --ok-soft: #dcefe1;
+  --code-bg: #efede6;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15181c; --surface: #1d2126; --fg: #e6e4de; --muted: #a2a7ae; --line: #343a42;
+    --asphalt: #0e1013; --accent: #e8b923; --accent-soft: #3d3412; --danger: #ef6b62; --danger-soft: #3f1d1b;
+    --ok: #74c18b; --ok-soft: #1c3324; --code-bg: #252a31; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15181c; --surface: #1d2126; --fg: #e6e4de; --muted: #a2a7ae; --line: #343a42;
+  --asphalt: #0e1013; --accent: #e8b923; --accent-soft: #3d3412; --danger: #ef6b62; --danger-soft: #3f1d1b;
+  --ok: #74c18b; --ok-soft: #1c3324; --code-bg: #252a31; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.62;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Faixa de abertura */
+.capa {
+  background: var(--asphalt); color: #f2f0ea;
+  padding-block: 40px 32px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 6px solid transparent;
+  border-image: repeating-linear-gradient(90deg, #e8b923 0 36px, transparent 36px 60px) 6;
+}
+.capa-inner { max-width: 1180px; margin: 0 auto; display: grid; gap: 14px; }
+.eyebrow {
+  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: #e8b923;
+}
+.capa h1 {
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(38px, 7vw, 68px); line-height: 1; margin: 0;
+  text-wrap: balance; letter-spacing: .01em;
+}
+.capa p { margin: 0; max-width: 68ch; color: #cfd2d6; }
+.capa .meta { font-family: var(--font-mono); font-size: 13px; color: #a9aeb5; }
+
+/* Corpo com índice */
+.pagina {
+  max-width: 1180px; margin: 0 auto;
+  padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 48px; align-items: start;
+}
+nav.indice {
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px);
+  font-size: 14px; display: grid; gap: 6px;
+}
+nav.indice strong {
+  font-family: var(--font-display); font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+}
+nav.indice ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; counter-reset: sec; }
+nav.indice li { counter-increment: sec; }
+nav.indice a { color: var(--fg); text-decoration: none; display: flex; gap: 8px; padding: 3px 0; }
+nav.indice a::before { content: counter(sec, decimal-leading-zero); font-family: var(--font-mono); color: var(--accent); font-size: 12.5px; padding-top: 2px; }
+nav.indice a:hover { color: var(--accent); }
+
+main { min-width: 0; display: grid; gap: 56px; }
+section { display: grid; gap: 16px; scroll-margin-top: 24px; }
+section > * { margin: 0; }
+h2 {
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4vw, 38px); line-height: 1.05;
+  text-wrap: balance; display: flex; gap: 12px; align-items: baseline;
+}
+h2 .n { font-family: var(--font-mono); font-size: 15px; color: var(--accent); font-weight: 500; }
+h3 { font-family: var(--font-display); font-weight: 600; font-size: 23px; line-height: 1.15; margin-top: 10px; text-wrap: balance; }
+h4 { font-size: 15.5px; font-weight: 600; margin: 0; }
+p, li { max-width: 72ch; }
+ul, ol { padding-left: 22px; display: grid; gap: 6px; }
+.lead { font-size: 18px; color: var(--fg); }
+.muted { color: var(--muted); }
+code, .mono { font-family: var(--font-mono); font-size: .9em; }
+code { background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+.fonte { font-size: 13px; color: var(--muted); }
+
+/* Números de destaque: só na seção do problema, onde os números são o ponto */
+.numeros { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.numero { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--danger); padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+.numero b { font-family: var(--font-display); font-size: 40px; line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; }
+.numero span { font-size: 14px; color: var(--muted); line-height: 1.4; }
+
+/* Tabelas */
+.tabela { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 620px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; font-family: var(--font-mono); white-space: nowrap; }
+
+/* Selos */
+.selo { display: inline-block; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .04em; padding: 2px 7px; border-radius: 2px; white-space: nowrap; }
+.selo.rec { background: var(--accent-soft); color: var(--fg); border: 1px solid var(--accent); }
+.selo.alt { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+.selo.livre { background: var(--ok-soft); color: var(--ok); }
+.selo.pago { background: var(--danger-soft); color: var(--danger); }
+
+/* Ferramentas: lista de definições, não cartões */
+.ferramentas { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.ferramenta { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.ferramenta .nome { display: grid; gap: 6px; align-content: start; }
+.ferramenta .nome h4 { font-family: var(--font-display); font-size: 20px; font-weight: 600; }
+.ferramenta .nome div { display: flex; flex-wrap: wrap; gap: 4px; }
+.ferramenta .desc { display: grid; gap: 8px; }
+.ferramenta .desc p { margin: 0; }
+
+/* Notas laterais */
+.nota { border-left: 4px solid var(--accent); background: var(--surface); padding: 12px 16px; display: grid; gap: 6px; }
+.nota.alerta { border-left-color: var(--danger); }
+.nota p { margin: 0; }
+.nota strong { font-family: var(--font-display); font-size: 17px; letter-spacing: .03em; }
+
+/* Fórmula */
+.formula { font-family: var(--font-mono); font-size: 14.5px; background: var(--code-bg); padding: 14px 16px; overflow-x: auto; white-space: pre; line-height: 1.7; }
+
+/* Diagrama */
+.diagrama { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); padding: 12px; }
+.diagrama svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.diagrama text { font-family: var(--font-body); }
+
+/* Trilha de estudo: é de fato uma sequência */
+.trilha { list-style: none; padding: 0; counter-reset: etapa; display: grid; gap: 0; }
+.trilha > li { counter-increment: etapa; display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); max-width: none; }
+.trilha > li::before {
+  content: counter(etapa); font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1;
+  width: 44px; height: 44px; display: grid; place-items: center; background: var(--accent-soft); color: var(--fg); border: 2px solid var(--accent);
+}
+.trilha h4 { font-family: var(--font-display); font-size: 20px; font-weight: 600; }
+.trilha p { margin: 4px 0 0; }
+
+details { border: 1px solid var(--line); background: var(--surface); padding: 10px 14px; }
+details summary { cursor: pointer; font-weight: 600; }
+details[open] summary { margin-bottom: 8px; }
+
+ol.fontes { font-size: 14px; gap: 4px; }
+ol.fontes li { overflow-wrap: anywhere; }
+
+@media (max-width: 900px) {
+  .pagina { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  nav.indice { position: static; border: 1px solid var(--line); background: var(--surface); padding: 12px 14px; }
+  nav.indice ol { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .ferramenta { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<header class="capa">
+  <div class="capa-inner">
+    <span class="eyebrow">Colatina do Futuro · Dossiê técnico · novembro de 2026</span>
+    <h1>Ferramentas e conceitos para o simulador de trânsito</h1>
+    <p>O que usar, o que estudar e quais intervenções testar para que o simulador 3D seja verossímil e sirva de apoio real à Prefeitura de Colatina, com foco na redução de mortes no trânsito.</p>
+    <span class="meta">Repositório: github.com/klitzq/colatina-do-futuro</span>
+  </div>
+</header>
+
+<div class="pagina">
+  <nav class="indice" aria-label="Índice">
+    <strong>Índice</strong>
+    <ol>
+      <li><a href="#resumo">Resumo e recomendação</a></li>
+      <li><a href="#problema">O problema em números</a></li>
+      <li><a href="#arquitetura">Arquitetura do simulador</a></li>
+      <li><a href="#ferramentas">Ferramentas por camada</a></li>
+      <li><a href="#dados">Fontes de dados</a></li>
+      <li><a href="#conceitos">Conceitos de tráfego</a></li>
+      <li><a href="#seguranca">Segurança viária</a></li>
+      <li><a href="#indice-pontuacao">Índice de pontuação</a></li>
+      <li><a href="#legislacao">Legislação e competências</a></li>
+      <li><a href="#intervencoes">Intervenções para testar</a></li>
+      <li><a href="#verde">Colatina Verde</a></li>
+      <li><a href="#fiscalizacao">Fiscalização coordenada</a></li>
+      <li><a href="#roteiro">Roteiro de execução</a></li>
+      <li><a href="#trilha">Trilha de estudo</a></li>
+      <li><a href="#riscos">Riscos e cuidados</a></li>
+      <li><a href="#fontes">Fontes</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <!-- 01 -->
+    <section id="resumo">
+      <h2><span class="n">01</span>Resumo e recomendação</h2>
+      <p class="lead">Um simulador de trânsito que a Prefeitura possa usar para decidir precisa de três coisas: um <strong>motor de simulação</strong> reconhecido pela engenharia de tráfego, <strong>dados reais de Colatina</strong> para calibrá-lo e uma <strong>visualização 3D</strong> que torne os resultados compreensíveis para gestores e população.</p>
+      <p>O ponto mais importante deste dossiê: o 3D é a vitrine, não o motor. Se o projeto calcular os movimentos dos veículos só no navegador, com uma física própria, os resultados não terão credibilidade técnica. O caminho recomendado é simular com uma ferramenta validada (SUMO) e usar o Mapbox e o three.js para mostrar o que ela calculou.</p>
+
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Camada</th><th>Recomendação</th><th>Alternativas</th><th>Por quê</th></tr></thead>
+          <tbody>
+            <tr><td>Motor de simulação</td><td><strong>Eclipse SUMO</strong> + TraCI/libsumo (Python)</td><td>MATSim, PTV Vissim, Aimsun</td><td>Livre, usado em pesquisa e por órgãos públicos, importa OpenStreetMap, simula semáforos, pedestres, bicicletas, veículos de emergência, conflitos e emissões.</td></tr>
+            <tr><td>Mapa e 3D</td><td><strong>Mapbox GL JS v3</strong> + <strong>deck.gl</strong> (frotas) + <strong>three.js</strong> (cenas detalhadas)</td><td>MapLibre GL, CesiumJS</td><td>Você já domina Mapbox; deck.gl desenha milhares de veículos com desempenho; three.js entra para modelos próximos (viaturas, semáforos, bloqueios).</td></tr>
+            <tr><td>Rede viária</td><td><strong>OpenStreetMap</strong> corrigido em campo</td><td>Base cadastral da Prefeitura</td><td>Gratuito e editável. Faixas, mãos de direção e semáforos precisam ser conferidos em Colatina.</td></tr>
+            <tr><td>Banco de dados</td><td><strong>PostgreSQL + PostGIS</strong> (+ índice H3)</td><td>SQLite/SpatiaLite no protótipo</td><td>Consultas espaciais (acidentes por trecho, raio de cobertura de viaturas, zonas críticas).</td></tr>
+            <tr><td>Análise e otimização</td><td><strong>Python</strong>: OSMnx, GeoPandas, PySAL, OR-Tools</td><td>R (sf, spdep)</td><td>Pontos críticos de acidentes, alocação de equipes, rotas de ronda.</td></tr>
+            <tr><td>Painel da Prefeitura</td><td><strong>Next.js</strong> (o projeto atual)</td><td>—</td><td>Já estruturado em camadas; vira o painel de cenários, resultados e relatórios.</td></tr>
+            <tr><td>App de campo (Guarda)</td><td><strong>Flutter</strong> + geolocator + Socket.IO</td><td>PWA</td><td>Mesmo padrão dos seus apps ASCCOR e Teus'Corres: posição das equipes em tempo real alimenta o painel.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section id="problema">
+      <h2><span class="n">02</span>O problema em números</h2>
+      <p>Os levantamentos públicos de 2026 confirmam a preocupação que motivou o projeto: Colatina está entre as cidades com mais mortes no trânsito do Espírito Santo, e no estado o trânsito já mata mais do que a violência.</p>
+
+      <div class="numeros">
+        <div class="numero"><b>2º</b><span>lugar no ES em mortes no trânsito em 2026, atrás de Linhares (Observatório da Segurança Pública)</span></div>
+        <div class="numero"><b>25</b><span>mortes em Colatina de janeiro ao fim de junho de 2026 (Observatório do Trânsito / Detran-ES)</span></div>
+        <div class="numero"><b>≈ 39</b><span>mortes por 100 mil habitantes ao ano, se o ritmo do 1º semestre se mantiver (estimativa deste dossiê)</span></div>
+        <div class="numero"><b>1.015</b><span>mortes no trânsito no ES em 2025, contra 761 homicídios</span></div>
+      </div>
+
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Indicador</th><th>Valor</th><th>Período</th><th>Fonte</th></tr></thead>
+          <tbody>
+            <tr><td>Mortes em Colatina</td><td class="num">15</td><td>1º jan – 6 abr 2026</td><td>Observatório Estadual da Segurança Pública, via ES Fala</td></tr>
+            <tr><td>Mortes em Colatina</td><td class="num">20</td><td>jan – abr 2026</td><td>Observatório da Segurança Pública, via ES Fala</td></tr>
+            <tr><td>Mortes em Colatina</td><td class="num">25</td><td>jan – 28 jun 2026</td><td>Observatório do Trânsito (Detran-ES), via ES Fala</td></tr>
+            <tr><td>Infrações em Colatina</td><td class="num">25.225</td><td>jan – 28 jun 2026</td><td>Observatório do Trânsito</td></tr>
+            <tr><td>Acidentes à noite (ES)</td><td class="num">48,1%</td><td>jan – abr 2026</td><td>Observatório da Segurança Pública</td></tr>
+            <tr><td>Acidentes em sábados e domingos (ES)</td><td class="num">37,3%</td><td>jan – abr 2026</td><td>idem (17,2% + 20,1%)</td></tr>
+            <tr><td>Colisões entre veículos (ES)</td><td class="num">41,5%</td><td>jan – abr 2026</td><td>idem</td></tr>
+            <tr><td>Casos em vias municipais e estaduais (ES)</td><td class="num">57,3%</td><td>jan – abr 2026</td><td>idem</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fonte">A estimativa de ≈ 39 por 100 mil usa 25 mortes em cerca de seis meses e a estimativa do IBGE de 129.301 habitantes para 2025: 25 × 2 ÷ 129.301 × 100.000. Para comparação, o ES teve cerca de 25 por 100 mil em 2025 (1.015 mortes para cerca de 4,1 milhões de habitantes), e a média brasileira dos últimos anos fica na casa de 17 por 100 mil. As fontes contam de forma diferente (local do acidente × residência da vítima; óbito no local × em até 30 dias), então os números servem como ordem de grandeza, não como série oficial.</p>
+
+      <h3>O que os casos recentes mostram</h3>
+      <ul>
+        <li><strong>A BR-259 atravessa a área urbana</strong> e concentra parte dos óbitos: Santa Helena (carro contra micro-ônibus, outubro de 2026), Colúmbia (km 65), Itapina (km 70) e Baunilha (km 40).</li>
+        <li><strong>Invasão de contramão</strong> aparece de forma recorrente. Em outubro de 2026, um motorista embriagado e sem CNH invadiu a contramão na BR-259 e matou um motociclista de 30 anos.</li>
+        <li><strong>Noite, fim de semana e álcool</strong> formam o padrão estadual. Isso orienta horários de fiscalização de forma direta.</li>
+        <li><strong>A travessia do Rio Doce é o grande gargalo.</strong> A Ponte Florentino Avidos é a principal ligação do Centro, com tráfego intenso de ônibus e caminhões. O Estado planeja a Terceira Ponte (16,6 m, duas faixas sentido São Silvano, ciclovia e calçadas), formando um binário com a ponte antiga.</li>
+      </ul>
+      <div class="nota alerta">
+        <strong>Consequência para o projeto</strong>
+        <p>O simulador deve tratar segurança como objetivo principal, e fluidez como secundário. Um cenário que acelera o trânsito e aumenta conflitos graves não pode ser apresentado como melhoria. Isso está embutido no índice proposto na seção 08.</p>
+      </div>
+      <div class="nota">
+        <strong>Oportunidade imediata</strong>
+        <p>A Terceira Ponte é o caso de uso ideal para a primeira versão: simular o binário antes da obra, medir o efeito no Centro e propor ajustes de semáforos e conversões. É um cenário concreto, de alto interesse público, com área limitada.</p>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section id="arquitetura">
+      <h2><span class="n">03</span>Arquitetura do simulador</h2>
+      <p>O sistema se divide em cinco partes. A simulação roda no servidor (Python + SUMO); o navegador recebe as trajetórias já calculadas e as desenha em 3D.</p>
+      <div class="diagrama" role="img" aria-label="Fluxo: dados alimentam a rede viária e a demanda; o motor SUMO simula cenários; os resultados viram métricas e o índice; o painel Next.js mostra o mapa 3D e os relatórios; o app da Guarda envia posições em tempo real.">
+        <svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/>
+            </marker>
+          </defs>
+          <g font-size="13" fill="var(--fg)">
+            <!-- coluna 1: dados -->
+            <rect x="10" y="20" width="180" height="150" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="22" y="44" font-weight="600" font-size="14">1. Dados</text>
+            <text x="22" y="68" fill="var(--muted)">OpenStreetMap</text>
+            <text x="22" y="88" fill="var(--muted)">Contagens de veículos</text>
+            <text x="22" y="108" fill="var(--muted)">Acidentes (PRF, Detran)</text>
+            <text x="22" y="128" fill="var(--muted)">Semáforos e sinalização</text>
+            <text x="22" y="148" fill="var(--muted)">IBGE / Waze for Cities</text>
+
+            <!-- coluna 2: modelo -->
+            <rect x="230" y="20" width="200" height="150" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="242" y="44" font-weight="600" font-size="14">2. Modelo da cidade</text>
+            <text x="242" y="68" fill="var(--muted)">Rede (netconvert)</text>
+            <text x="242" y="88" fill="var(--muted)">Demanda O-D (routeSampler)</text>
+            <text x="242" y="108" fill="var(--muted)">Planos semafóricos</text>
+            <text x="242" y="128" fill="var(--muted)">Calibração (GEH)</text>
+            <text x="242" y="148" fill="var(--muted)">PostGIS</text>
+
+            <!-- coluna 3: motor -->
+            <rect x="470" y="20" width="220" height="150" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="482" y="44" font-weight="600" font-size="14">3. Motor SUMO</text>
+            <text x="482" y="68">Cenário base × intervenções</text>
+            <text x="482" y="88">TraCI: semáforos, bloqueios</text>
+            <text x="482" y="108">Emergência (bluelight)</text>
+            <text x="482" y="128">Conflitos (SSM: TTC, PET)</text>
+            <text x="482" y="148">Emissões (HBEFA)</text>
+
+            <!-- coluna 4: resultados -->
+            <rect x="730" y="20" width="240" height="150" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="742" y="44" font-weight="600" font-size="14">4. Resultados</text>
+            <text x="742" y="68" fill="var(--muted)">Trajetórias (FCD)</text>
+            <text x="742" y="88" fill="var(--muted)">Atrasos, filas, velocidades</text>
+            <text x="742" y="108" fill="var(--muted)">Conflitos graves por ponto</text>
+            <text x="742" y="128" fill="var(--muted)">Tempo de resposta</text>
+            <text x="742" y="148" font-weight="600">Índice de pontuação</text>
+
+            <line x1="190" y1="95" x2="226" y2="95" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#seta)"/>
+            <line x1="430" y1="95" x2="466" y2="95" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#seta)"/>
+            <line x1="690" y1="95" x2="726" y2="95" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#seta)"/>
+
+            <!-- linha 2: painel e app -->
+            <rect x="470" y="220" width="500" height="120" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="482" y="244" font-weight="600" font-size="14">5. Painel da Prefeitura (Next.js)</text>
+            <text x="482" y="268" fill="var(--muted)">Mapbox GL JS v3: terreno, prédios 3D, estilo da cidade</text>
+            <text x="482" y="288" fill="var(--muted)">deck.gl TripsLayer: milhares de veículos animados</text>
+            <text x="482" y="308" fill="var(--muted)">three.js: viaturas, semáforos, bloqueios em close</text>
+            <text x="482" y="328" fill="var(--muted)">Comparação de cenários e relatório para a gestão</text>
+
+            <rect x="10" y="220" width="420" height="120" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="22" y="244" font-weight="600" font-size="14">App de campo da Guarda (Flutter)</text>
+            <text x="22" y="268" fill="var(--muted)">Posição das equipes (geolocator + Socket.IO)</text>
+            <text x="22" y="288" fill="var(--muted)">Registro de ocorrências georreferenciadas</text>
+            <text x="22" y="308" fill="var(--muted)">Recebe escala e rota sugeridas pelo otimizador</text>
+            <text x="22" y="328" fill="var(--muted)">Ocorrências voltam como dados (seta para 1)</text>
+
+            <line x1="850" y1="170" x2="850" y2="216" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#seta)"/>
+            <line x1="430" y1="280" x2="466" y2="280" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#seta)" marker-start="url(#seta)"/>
+            <line x1="100" y1="220" x2="100" y2="174" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#seta)"/>
+          </g>
+        </svg>
+      </div>
+      <p>Encaixe no repositório atual: os módulos do backend em camadas viram <code>via</code>, <code>cruzamento</code>, <code>semaforo</code>, <code>cenario</code>, <code>intervencao</code>, <code>simulacao</code> (dispara e acompanha a execução no serviço Python), <code>resultado</code>, <code>ocorrencia</code> (acidentes) e <code>equipe</code> (Guarda). Cada regra técnica, como "um cenário só é comparável ao base se usar a mesma demanda", vira um caso de uso testado, no padrão já definido.</p>
+    </section>
+
+    <!-- 04 -->
+    <section id="ferramentas">
+      <h2><span class="n">04</span>Ferramentas por camada</h2>
+
+      <h3>Motor de simulação</h3>
+      <div class="ferramentas">
+        <div class="ferramenta">
+          <div class="nome"><h4>Eclipse SUMO</h4><div><span class="selo rec">recomendado</span><span class="selo livre">livre</span></div></div>
+          <div class="desc">
+            <p>Simulador microscópico: cada veículo, pedestre e bicicleta é um agente com aceleração, troca de faixa e reação. É o padrão aberto mais usado em pesquisa de tráfego.</p>
+            <p><strong>O que importa para Colatina:</strong> <code>netconvert</code> importa o OpenStreetMap; <code>osmWebWizard.py</code> gera um primeiro cenário em minutos; <code>routeSampler.py</code> cria fluxos a partir de contagens reais; <strong>TraCI</strong> e <strong>libsumo</strong> controlam a simulação em Python (mudar tempos de semáforo, fechar uma faixa, posicionar uma blitz); o dispositivo <strong>bluelight</strong> simula veículos de emergência; o dispositivo <strong>SSM</strong> mede conflitos (TTC, PET); o modelo <strong>HBEFA</strong> estima emissões; a saída <strong>FCD</strong> fornece as trajetórias para o 3D.</p>
+          </div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>MATSim</h4><div><span class="selo alt">alternativa</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>Simulação por agentes com o dia inteiro de cada pessoa (casa, trabalho, escola) e escolha de modo de transporte. Bom para estudar o <em>Colatina Verde</em> (quem trocaria o carro pela bicicleta elétrica), mas é menos detalhado em cruzamentos. Pode complementar o SUMO numa fase posterior.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>PTV Vissim / Aimsun</h4><div><span class="selo alt">referência de mercado</span><span class="selo pago">licença paga</span></div></div>
+          <div class="desc"><p>Usados por consultorias e grandes prefeituras. Vale conhecer a terminologia e os relatórios que produzem, porque é o que um técnico de trânsito espera ver. Não são necessários para o projeto.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>CityFlow / SUMO-RL</h4><div><span class="selo alt">pesquisa</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>Ambientes para treinar semáforos com aprendizado por reforço. Interessante para a etapa de "semáforos inteligentes", depois que o modelo base estiver calibrado.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>Simulação própria em JS</h4><div><span class="selo alt">só para demonstração</span></div></div>
+          <div class="desc"><p>Implementar o modelo IDM num Web Worker é ótimo para aprender e para demonstrações interativas leves. Não use como base dos resultados entregues à Prefeitura: sem validação, os números não se sustentam numa discussão técnica.</p></div>
+        </div>
+      </div>
+
+      <h3>Mapa, terreno e 3D</h3>
+      <div class="ferramentas">
+        <div class="ferramenta">
+          <div class="nome"><h4>Mapbox GL JS v3</h4><div><span class="selo rec">recomendado</span><span class="selo pago">gratuito até a cota</span></div></div>
+          <div class="desc">
+            <p>Base do mapa: estilo <strong>Standard</strong> com prédios 3D e iluminação por hora do dia (útil para cenas noturnas, já que quase metade dos acidentes no ES ocorre à noite), <strong>terreno</strong> (relevo do vale do Rio Doce) e <strong>custom layers</strong> para desenhar com WebGL/three.js.</p>
+            <p>APIs úteis: <strong>Directions</strong> (perfil <code>driving-traffic</code>), <strong>Matrix</strong> (tempos entre muitos pontos), <strong>Isochrone</strong> (área alcançável por uma viatura ou ambulância em X minutos), <strong>Map Matching</strong> (ajustar trajetos GPS das equipes às ruas) e o tileset <strong>Mapbox Traffic</strong> (níveis de congestionamento). Confira os preços por carregamento de mapa e por requisição antes de abrir o painel ao público.</p>
+          </div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>deck.gl</h4><div><span class="selo rec">recomendado</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>Camadas de alto desempenho sobre o Mapbox (<code>MapboxOverlay</code> intercalado). <strong>TripsLayer</strong> anima milhares de trajetórias saídas do SUMO; <strong>ScenegraphLayer</strong> desenha modelos 3D (glTF) de carros, ônibus e motos com instanciação; <strong>HeatmapLayer</strong> e <strong>H3HexagonLayer</strong> mostram zonas de acidentes. É a forma mais simples de ter "diversos fluxos de veículos" na tela sem travar o navegador.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>three.js</h4><div><span class="selo rec">para cenas detalhadas</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>Para o "modo cena": aproximar um cruzamento e ver semáforos mudando, uma viatura posicionando um bloqueio, uma faixa elevada de pedestres. Integra-se ao Mapbox por custom layer (a biblioteca comunitária Threebox ajuda nisso) ou numa cena própria. Estude <code>InstancedMesh</code> (muitos objetos iguais com uma chamada de desenho), carregamento de glTF e sistemas de coordenadas (Mercator para metros).</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>MapLibre GL JS</h4><div><span class="selo alt">alternativa</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>Derivado aberto do Mapbox GL. Sem cobrança por carregamento, compatível com deck.gl. Bom plano B se o custo do Mapbox crescer ou se a Prefeitura exigir uma solução sem fornecedor único.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>CesiumJS + 3D Tiles</h4><div><span class="selo alt">alternativa</span></div></div>
+          <div class="desc"><p>Globo 3D com terreno preciso e suporte a malhas fotorrealistas (como os Photorealistic 3D Tiles do Google). Visualmente impressionante, mas a cobertura de Colatina precisa ser conferida, e há termos de uso e custos. Considere só se o realismo visual for prioridade.</p></div>
+        </div>
+      </div>
+
+      <h3>Roteamento e navegação</h3>
+      <div class="ferramentas">
+        <div class="ferramenta">
+          <div class="nome"><h4>Roteamento do SUMO</h4><div><span class="selo rec">dentro da simulação</span></div></div>
+          <div class="desc"><p>Na simulação, os veículos escolhem rotas pelo próprio SUMO (<code>duarouter</code>, rerroteamento dinâmico). Assim um bloqueio policial ou uma faixa interditada muda o comportamento dos motoristas de forma coerente.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>OSRM / Valhalla / GraphHopper</h4><div><span class="selo alt">fora da simulação</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>Servidores de rota auto-hospedados sobre o OpenStreetMap. Úteis para o app da Guarda (rota até uma ocorrência) e para cálculos em massa sem pagar por requisição. Valhalla também calcula isócronas.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>pgRouting</h4><div><span class="selo alt">no banco</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>Rotas e caminhos mínimos dentro do PostgreSQL. Prático para relatórios ("quais bairros ficam a mais de 8 minutos de uma base da Guarda").</p></div>
+        </div>
+      </div>
+
+      <h3>Análise espacial, otimização e tempo real</h3>
+      <div class="ferramentas">
+        <div class="ferramenta">
+          <div class="nome"><h4>PostGIS + H3</h4><div><span class="selo rec">recomendado</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>Guardar vias, acidentes e cenários com geometria. H3 divide a cidade em hexágonos de tamanho igual, o que facilita comparar taxas de acidentes entre regiões e montar mapas de calor estáveis.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>OSMnx, GeoPandas, PySAL</h4><div><span class="selo rec">recomendado</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>OSMnx baixa e analisa a rede viária como grafo (centralidade, pontos de estrangulamento). PySAL faz estatística espacial: Getis-Ord Gi* e Moran local para encontrar pontos críticos de acidentes com significância estatística, e não só "onde tem mais pontos no mapa".</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>Google OR-Tools</h4><div><span class="selo rec">recomendado</span><span class="selo livre">livre</span></div></div>
+          <div class="desc"><p>Otimização para a fiscalização: onde posicionar equipes para cobrir o máximo de pontos críticos (problema de cobertura máxima), como montar rondas (roteamento de veículos com janelas de tempo) e escalas por turno.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>Flutter + geolocator + Socket.IO</h4><div><span class="selo rec">você já usa</span></div></div>
+          <div class="desc"><p>App da Guarda com a posição das equipes em tempo real, como no app do motoca do Teus'Corres. No painel, as viaturas reais aparecem junto com a simulação, e as ocorrências registradas em campo alimentam a base de acidentes.</p></div>
+        </div>
+        <div class="ferramenta">
+          <div class="nome"><h4>Visão computacional</h4><div><span class="selo alt">fase avançada</span></div></div>
+          <div class="desc"><p>Modelos de detecção (família YOLO) e rastreamento sobre vídeos de câmeras para contar veículos por faixa e medir velocidades. Barateia a coleta de dados de calibração, mas exige cuidado com a LGPD (seção 09).</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 -->
+    <section id="dados">
+      <h2><span class="n">05</span>Fontes de dados</h2>
+      <p>Sem dados de Colatina, o simulador é só uma animação. A calibração é o que dá credibilidade. Liste, peça e documente cada fonte.</p>
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Fonte</th><th>O que fornece</th><th>Uso no projeto</th></tr></thead>
+          <tbody>
+            <tr><td>OpenStreetMap</td><td>Ruas, mão de direção, faixas, semáforos, limites (incompleto)</td><td>Rede base; corrigir em campo e devolver as correções ao OSM</td></tr>
+            <tr><td>PRF – dados abertos</td><td>Acidentes em rodovias federais com km, data, hora, causa, tipo e coordenadas</td><td>Pontos críticos da BR-259 no perímetro urbano</td></tr>
+            <tr><td>Observatório do Trânsito (Detran-ES)</td><td>Infrações e óbitos por município</td><td>Série histórica e metas</td></tr>
+            <tr><td>Observatório da Segurança Pública (Sesp-ES)</td><td>Óbitos, horários, dias da semana, tipo de via</td><td>Padrões temporais para escala da fiscalização</td></tr>
+            <tr><td>DATASUS / SIM</td><td>Óbitos por causa externa (CID V01–V89) por município</td><td>Perfil das vítimas (motociclistas, pedestres, idade)</td></tr>
+            <tr><td>RENAEST (Senatran)</td><td>Registro nacional de acidentes e estatísticas</td><td>Comparação com cidades de porte parecido</td></tr>
+            <tr><td>Bombeiros, SAMU, PM, Guarda</td><td>Ocorrências com endereço e horário</td><td>Base local mais completa; pedir via convênio ou Lei de Acesso à Informação</td></tr>
+            <tr><td>Contagens volumétricas próprias</td><td>Veículos por faixa e por tipo, nos horários de pico</td><td>Calibrar a demanda (essencial)</td></tr>
+            <tr><td>Waze for Cities</td><td>Alertas e lentidão em tempo quase real; gratuito para órgãos públicos</td><td>Validar os gargalos simulados</td></tr>
+            <tr><td>Mapbox Traffic / Directions</td><td>Níveis de congestionamento e tempos de viagem</td><td>Validar velocidades médias por trecho</td></tr>
+            <tr><td>IBGE (Censo 2022, setores)</td><td>População, domicílios e renda por setor</td><td>Gerar a demanda origem-destino e analisar equidade</td></tr>
+            <tr><td>Prefeitura</td><td>Planos semafóricos, inventário de sinalização, PlanMob (2015) e revisão</td><td>Programar os semáforos reais e alinhar com o planejamento oficial</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section id="conceitos">
+      <h2><span class="n">06</span>Conceitos de engenharia de tráfego</h2>
+      <p>Estes são os conceitos que permitem conversar com técnicos de trânsito e explicar por que um resultado é confiável.</p>
+
+      <h3>Fluxo e capacidade</h3>
+      <ul>
+        <li><strong>Diagrama fundamental:</strong> fluxo (veículos/h), densidade (veículos/km) e velocidade (km/h) se relacionam por <code>q = k × v</code>. Acima da densidade crítica, o fluxo cai e o congestionamento se forma.</li>
+        <li><strong>Modelo LWR e ondas de choque:</strong> explicam como uma fila se propaga para trás a partir de um gargalo, como a cabeceira de uma ponte.</li>
+        <li><strong>Capacidade e nível de serviço (A a F):</strong> conceito do Highway Capacity Manual (HCM). No Brasil, o Manual de Estudos de Tráfego do DNIT traz os métodos de contagem e análise.</li>
+        <li><strong>Matriz origem-destino:</strong> quantas viagens saem de cada zona para cada outra. É a "demanda" que o simulador precisa reproduzir.</li>
+        <li><strong>Equilíbrio de Wardrop e função BPR:</strong> motoristas escolhem a rota mais rápida até nenhuma alternativa ser melhor; a função BPR estima o tempo de viagem em função do volume.</li>
+        <li><strong>Paradoxo de Braess e demanda induzida:</strong> uma ligação nova pode piorar o tempo total, e mais capacidade atrai mais carros. É essencial ao avaliar a Terceira Ponte.</li>
+      </ul>
+
+      <h3>Comportamento dos veículos</h3>
+      <ul>
+        <li><strong>Modelos de seguimento (car-following):</strong> Krauss (padrão do SUMO) e IDM (Intelligent Driver Model). Definem como cada carro acelera e freia em relação ao da frente.</li>
+        <li><strong>Troca de faixa:</strong> modelo LC2013 do SUMO; MOBIL na literatura. Controlam ultrapassagens e uso indevido de faixas.</li>
+        <li><strong>Heterogeneidade:</strong> motos, ônibus, caminhões e bicicletas têm parâmetros diferentes. Em Colatina, a mistura de caminhões da BR-259 com tráfego urbano é um fator de risco central.</li>
+      </ul>
+
+      <h3>Semáforos</h3>
+      <ul>
+        <li><strong>Ciclo, fases, verde efetivo, entreverdes</strong> (amarelo + vermelho geral). O Manual Brasileiro de Sinalização de Trânsito do CONTRAN, volume V (Sinalização Semafórica), é a referência nacional.</li>
+        <li><strong>Fórmula de Webster</strong> para o ciclo ótimo: <code>C₀ = (1,5·L + 5) / (1 − Y)</code>, em que L é o tempo perdido por ciclo e Y a soma das taxas de ocupação críticas.</li>
+        <li><strong>Onda verde (coordenação):</strong> defasagem entre semáforos em sequência. Calibrada para 40–50 km/h, também é uma ferramenta de controle de velocidade.</li>
+        <li><strong>Controle atuado e adaptativo:</strong> detectores mudam os tempos conforme a fila. Sistemas como SCOOT e SCATS são a referência do que significa "semáforo inteligente".</li>
+        <li><strong>Preempção para emergência:</strong> o semáforo abre para a ambulância que se aproxima. Simulável no SUMO com o dispositivo bluelight + TraCI.</li>
+      </ul>
+
+      <h3>Calibração e validação</h3>
+      <ul>
+        <li><strong>Estatística GEH:</strong> compara volumes simulados e contados. A regra prática é GEH &lt; 5 em pelo menos 85% dos pontos de contagem.</li>
+        <li><strong>Separar dados de calibração e de validação:</strong> ajuste o modelo com um conjunto e confira com outro (por exemplo, outro dia ou outro horário).</li>
+        <li><strong>Várias rodadas com sementes aleatórias:</strong> uma simulação microscópica é estocástica. Relate média e intervalo, nunca uma rodada só.</li>
+      </ul>
+    </section>
+
+    <!-- 07 -->
+    <section id="seguranca">
+      <h2><span class="n">07</span>Segurança viária</h2>
+      <h3>Abordagem do Sistema Seguro e Visão Zero</h3>
+      <p>É a abordagem recomendada pela Organização Mundial da Saúde no Plano Global da Década de Ação pela Segurança no Trânsito 2021–2030. Parte de duas ideias: pessoas erram, e o sistema (vias, velocidades, veículos, fiscalização) deve impedir que um erro vire uma morte. Nenhuma morte é aceitável como custo da mobilidade. No Brasil, o PNATRANS (Lei 13.614/2018) segue a mesma linha, com metas de redução de mortes.</p>
+
+      <h3>Velocidade é o fator central</h3>
+      <ul>
+        <li><strong>Modelo de potência de Nilsson:</strong> o número de mortes varia aproximadamente com a quarta potência da velocidade média: <code>mortes₁ / mortes₀ ≈ (v₁ / v₀)⁴</code>. Reduzir a velocidade média de 50 para 45 km/h corta as mortes esperadas em cerca de um terço (0,9⁴ ≈ 0,66).</li>
+        <li><strong>Pedestres:</strong> a OMS indica que o risco de morte de um pedestre atropelado cresce muito acima de 30 km/h. Por isso zonas 30 perto de escolas, hospitais e áreas comerciais são uma das medidas mais eficazes.</li>
+        <li><strong>Energia cinética:</strong> cresce com o quadrado da velocidade, o que explica por que colisões frontais por invasão de contramão em rodovia urbana são tão letais.</li>
+      </ul>
+
+      <h3>Medir segurança na simulação</h3>
+      <ul>
+        <li><strong>Medidas substitutas de segurança:</strong> a simulação não "gera acidentes", mas mede conflitos. TTC (tempo até a colisão) e PET (tempo pós-invasão) abaixo de limites, como TTC &lt; 1,5 s, indicam quase-acidentes. O dispositivo SSM do SUMO calcula isso, e a ferramenta SSAM da FHWA é a referência metodológica.</li>
+        <li><strong>Exposição de usuários vulneráveis:</strong> quantos pedestres e ciclistas cruzam vias com velocidade alta.</li>
+        <li><strong>Porcentagem de veículos acima do limite</strong> por trecho, e não só a velocidade média.</li>
+      </ul>
+
+      <h3>Analisar acidentes reais</h3>
+      <ul>
+        <li><strong>Pontos críticos com estatística:</strong> densidade de kernel na rede viária, Getis-Ord Gi*, taxa por volume (acidentes por milhão de veículos), e não só contagem absoluta.</li>
+        <li><strong>Regressão à média:</strong> um ponto com muitos acidentes num ano tende a ter menos no seguinte, mesmo sem intervenção. Sem corrigir isso (método Empirical Bayes, do Highway Safety Manual), qualquer radar "parece" funcionar.</li>
+        <li><strong>Avaliação antes e depois com grupo de controle</strong> (diferenças em diferenças): compara o local tratado com locais parecidos não tratados.</li>
+        <li><strong>iRAP:</strong> metodologia de classificação por estrelas da segurança das vias a partir das características físicas, útil para priorizar trechos.</li>
+      </ul>
+    </section>
+
+    <!-- 08 -->
+    <section id="indice-pontuacao">
+      <h2><span class="n">08</span>Índice de pontuação proposto</h2>
+      <p>A "pontuação calculada de maneira inteligente" precisa ser transparente: cada componente tem uma métrica conhecida, e o cenário atual (calibrado) vale 100. Um cenário acima de 100 é melhor que hoje.</p>
+      <div class="formula">ÍNDICE = 0,40·Segurança + 0,25·Mobilidade + 0,15·Emergência + 0,10·Pedestres e ciclistas + 0,10·Ambiente
+
+cada componente = 100 × (valor do cenário base ÷ valor do cenário testado)   ← para métricas em que menor é melhor
+                  com teto de 150 para evitar que um único componente domine
+
+TRAVA DE SEGURANÇA: se Segurança &lt; 100, ÍNDICE = min(ÍNDICE, 99)</div>
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Componente</th><th>Peso</th><th>Métricas</th></tr></thead>
+          <tbody>
+            <tr><td>Segurança</td><td class="num">40%</td><td>Conflitos graves (TTC &lt; 1,5 s) por 1.000 veículos·km; % de veículos acima do limite; velocidade no percentil 85 em zonas com pedestres; risco esperado pelo modelo de Nilsson</td></tr>
+            <tr><td>Mobilidade</td><td class="num">25%</td><td>Atraso médio por veículo; índice de tempo de viagem (TTI); comprimento máximo de fila nas pontes; confiabilidade (índice de planejamento, percentil 95)</td></tr>
+            <tr><td>Emergência</td><td class="num">15%</td><td>Tempo de resposta simulado de ambulância e viatura a pontos-chave; área coberta em 8 minutos (isócrona)</td></tr>
+            <tr><td>Pedestres e ciclistas</td><td class="num">10%</td><td>Tempo de espera para travessia; extensão de rotas cicláveis seguras; desvios impostos a pedestres</td></tr>
+            <tr><td>Ambiente</td><td class="num">10%</td><td>CO₂ e NOx (HBEFA); participação de viagens a pé, de bicicleta e elétricas</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Os pesos são uma proposta inicial. Devem ser discutidos com a Prefeitura e publicados junto com os resultados. A trava de segurança impede que ganho de fluidez compense aumento de risco, coerente com a abordagem do Sistema Seguro.</p>
+    </section>
+
+    <!-- 09 -->
+    <section id="legislacao">
+      <h2><span class="n">09</span>Legislação e competências</h2>
+      <p>O simulador só gera propostas viáveis se respeitar quem pode fazer o quê. Isto é um resumo para estudo, não um parecer jurídico: confira o texto vigente de cada norma.</p>
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Norma</th><th>Ponto relevante</th><th>Efeito no projeto</th></tr></thead>
+          <tbody>
+            <tr><td>CTB, art. 24</td><td>Competências do município: sinalização, semáforos, fiscalização e operação das vias municipais</td><td>Intervenções em vias municipais dependem só da Prefeitura</td></tr>
+            <tr><td>CTB, art. 20</td><td>PRF patrulha e fiscaliza as rodovias federais</td><td>A BR-259 exige articulação com PRF e DNIT</td></tr>
+            <tr><td>CTB, art. 61</td><td>Limites urbanos quando não há sinalização: 80 (trânsito rápido), 60 (arterial), 40 (coletora), 30 km/h (local)</td><td>Valor padrão na rede simulada</td></tr>
+            <tr><td>CTB, arts. 218, 191, 202, 203, 185, 186, 165</td><td>Excesso de velocidade; forçar passagem; ultrapassagens proibidas; não manter a faixa; contramão; embriaguez</td><td>Tipos de infração que a fiscalização simulada pretende reduzir</td></tr>
+            <tr><td>CTB, art. 29, VII</td><td>Prioridade de veículos de emergência</td><td>Base para corredores e preempção semafórica</td></tr>
+            <tr><td>Lei 13.022/2014 + STF, Tema 472 (RE 658.570)</td><td>Guarda Municipal pode fiscalizar o trânsito e autuar quando a lei municipal atribui essa competência; em vias de outro ente, atua mediante convênio</td><td>Confirmar a lei municipal de Colatina e os convênios existentes</td></tr>
+            <tr><td>Resolução CONTRAN 798/2020</td><td>Requisitos para medidores de velocidade, incluindo estudo técnico e monitoramento da eficácia</td><td>O simulador pode produzir parte do estudo técnico de um novo radar</td></tr>
+            <tr><td>Resolução CONTRAN 996/2023</td><td>Regras para bicicletas elétricas, ciclomotores e autopropelidos (patinetes)</td><td>Define o que o Colatina Verde pode incentivar e onde cada veículo circula</td></tr>
+            <tr><td>Lei 12.587/2012 (PNMU)</td><td>Prioridade ao transporte ativo e coletivo; plano de mobilidade obrigatório</td><td>Colatina tem PlanMob desde 2015 e comissão de revisão (2024)</td></tr>
+            <tr><td>Lei 13.614/2018 (PNATRANS)</td><td>Plano nacional de redução de mortes e lesões no trânsito</td><td>Enquadramento das metas do projeto</td></tr>
+            <tr><td>LGPD (Lei 13.709/2018)</td><td>Placas, imagens e localização são dados pessoais</td><td>Anonimizar câmeras e GPS; base legal e finalidade definidas</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="nota">
+        <strong>Ponto a confirmar com a Prefeitura</strong>
+        <p>Se o trânsito de Colatina é municipalizado (órgão executivo integrado ao Sistema Nacional de Trânsito), qual secretaria responde por ele, se a Guarda tem atribuição de trânsito em lei municipal e quais convênios existem com Detran, DER e PRF. Essas respostas definem quais intervenções o simulador pode propor como "executáveis pelo município".</p>
+      </div>
+      <div class="nota alerta">
+        <strong>Ressalva sobre a Resolução 996/2023</strong>
+        <p>Há questionamentos em curso sobre partes da norma, como uma ação civil pública divulgada pela Aliança Bike em 2026. Verifique a situação vigente antes de desenhar incentivos.</p>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="intervencoes">
+      <h2><span class="n">10</span>Intervenções para testar no simulador</h2>
+      <p>Cada intervenção abaixo vira um "cenário" com parâmetros no SUMO. A coluna "como simular" indica a técnica.</p>
+
+      <h3>Velocidade</h3>
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Intervenção</th><th>Como simular</th><th>O que medir</th></tr></thead>
+          <tbody>
+            <tr><td>Zona 30 perto de escolas, hospitais e no Centro</td><td>Reduzir <code>maxSpeed</code> das vias; aumentar a aderência dos motoristas ao limite (<code>speedFactor</code>)</td><td>Conflitos com pedestres, risco de Nilsson, impacto no tempo de viagem (geralmente pequeno)</td></tr>
+            <tr><td>Moderação de tráfego (lombadas, plataformas elevadas, estreitamentos, chicanas)</td><td>Trechos com velocidade máxima reduzida; geometria alterada na rede</td><td>Velocidade no percentil 85</td></tr>
+            <tr><td>Radares fixos e móveis</td><td>Na área de influência do radar, motoristas reduzem a velocidade; fora dela, voltam. Modele o "efeito canguru"</td><td>Extensão do trecho realmente controlado</td></tr>
+            <tr><td>Onda verde a 40–50 km/h</td><td>Defasagem dos semáforos via TraCI</td><td>Paradas, velocidade média, excesso de velocidade entre semáforos</td></tr>
+            <tr><td>Painéis educativos de velocidade</td><td>Redução moderada do <code>speedFactor</code> no trecho (parâmetro a calibrar com a literatura)</td><td>Velocidade antes e depois</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Ultrapassagens perigosas e uso das faixas</h3>
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Intervenção</th><th>Como simular</th><th>O que medir</th></tr></thead>
+          <tbody>
+            <tr><td>Separação física de sentidos na BR-259 urbana (canteiro, barreira, tachões)</td><td>Proibir troca para a faixa oposta no trecho; comparar com o cenário que permite ultrapassagem pela contramão</td><td>Conflitos frontais (TTC entre sentidos opostos)</td></tr>
+            <tr><td>Linha contínua e faixas adicionais de subida</td><td>Restrições de troca de faixa (<code>changeLeft/changeRight</code>); nova faixa</td><td>Filas atrás de caminhões, ultrapassagens arriscadas</td></tr>
+            <tr><td>Faixa exclusiva de ônibus nas pontes e no Centro</td><td>Faixa com <code>allow="bus"</code>; parte dos carros desobedecendo (taxa calibrável)</td><td>Tempo dos ônibus, efeito nos carros, ganho com fiscalização</td></tr>
+            <tr><td>Retornos e conversões à esquerda</td><td>Fechar conversões perigosas e criar retornos seguros</td><td>Conflitos em cruzamentos, desvio adicional</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Fluxo, pontes e emergência</h3>
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Intervenção</th><th>Como simular</th><th>O que medir</th></tr></thead>
+          <tbody>
+            <tr><td>Binário Florentino Avidos + Terceira Ponte</td><td>Nova ligação e mudança de sentido; reequilíbrio das rotas</td><td>Filas nas cabeceiras, tempo Centro ↔ São Silvano, efeito Braess</td></tr>
+            <tr><td>Semáforos atuados ou adaptativos</td><td>Programa <code>actuated</code> do SUMO ou controle próprio via TraCI</td><td>Atraso, filas, paradas</td></tr>
+            <tr><td>Corredor de emergência e preempção</td><td>Dispositivo bluelight + abertura de verde via TraCI</td><td>Tempo de resposta até hospitais e bairros</td></tr>
+            <tr><td>Interdição de uma ponte (acidente, cheia do Rio Doce)</td><td>Fechar a ligação durante a simulação; rerroteamento</td><td>Resiliência: quanto a cidade trava e onde</td></tr>
+            <tr><td>Faixas de pedestres e travessias elevadas</td><td>Travessias com prioridade; pedestres pelo modelo <code>striping</code></td><td>Espera do pedestre, conflitos, atraso dos veículos</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="verde">
+      <h2><span class="n">11</span>Colatina Verde</h2>
+      <p>A ideia de reduzir carros por meio de bicicletas elétricas, patinetes e outros veículos leves faz sentido em Colatina: as distâncias urbanas são curtas, e a bicicleta elétrica reduz o esforço nas subidas e no calor. Mas mudar o modo de transporte sem infraestrutura segura aumenta a exposição de usuários vulneráveis. A ordem certa é rede segura primeiro, incentivo depois.</p>
+      <h3>Medidas para estudar</h3>
+      <ul>
+        <li><strong>Rede cicloviária conectada:</strong> ciclovias e ciclofaixas ligando bairros ao Centro. A Terceira Ponte já prevê ciclovia, o que cria um eixo natural.</li>
+        <li><strong>Bicicletas elétricas compartilhadas</strong> com estações nos polos (rodoviária, Centro, campus do IFES e da UNESC, hospitais).</li>
+        <li><strong>Incentivos municipais:</strong> desconto ou crédito para compra de bicicleta elétrica (com critério de renda), bicicletários seguros, vestiários em prédios públicos, programas com empresas ("vá de bike ao trabalho"), arborização das rotas.</li>
+        <li><strong>Gestão do estacionamento no Centro:</strong> rotativo e preço diferenciado reduzem a circulação de quem procura vaga; a receita pode financiar a rede cicloviária.</li>
+        <li><strong>Integração com o ônibus:</strong> bicicletário nos pontos principais e suporte para bicicleta.</li>
+        <li><strong>Conformidade com a Resolução 996/2023:</strong> incentivar só equipamentos que se enquadram como bicicleta elétrica ou autopropelido, com regras de onde cada um circula.</li>
+      </ul>
+      <h3>Como o simulador avalia</h3>
+      <ul>
+        <li>Cenários com x% das viagens curtas de carro migrando para bicicleta elétrica (tipos de veículo do SUMO: <code>bicycle</code> com velocidade ajustada).</li>
+        <li>Redução de emissões (HBEFA), de atraso e de conflitos carro × bicicleta.</li>
+        <li>Para estimar <em>quantas</em> pessoas trocariam de modo, é preciso um modelo de escolha modal (logit) com pesquisa local de preferência declarada, ou um modelo de agentes como o MATSim.</li>
+      </ul>
+    </section>
+
+    <!-- 12 -->
+    <section id="fiscalizacao">
+      <h2><span class="n">12</span>Fiscalização coordenada</h2>
+      <p>O simulador pode testar <em>onde</em>, <em>quando</em> e <em>com quantas equipes</em> fiscalizar, e o efeito disso no fluxo e no comportamento.</p>
+      <h3>Princípios</h3>
+      <ul>
+        <li><strong>Fiscalizar onde e quando o risco está:</strong> no ES, quase metade dos acidentes ocorre à noite, e sábados e domingos somam 37%. Operações de alcoolemia e velocidade devem seguir esse padrão, e não o horário comercial.</li>
+        <li><strong>Pontos críticos priorizados por estatística</strong> (seção 07), não por percepção.</li>
+        <li><strong>Imprevisibilidade:</strong> blitz em lugares e horários sempre iguais é contornada. A literatura de "jogos de segurança" (Stackelberg security games, usados no aeroporto de Los Angeles no sistema ARMOR) mostra como sortear posições ponderadas pelo risco.</li>
+        <li><strong>Efeito de dissuasão visível:</strong> presença ostensiva em trechos de contramão e ultrapassagem reduz o comportamento de risco; modele isso como redução da agressividade na área de influência.</li>
+        <li><strong>Operações integradas:</strong> Guarda Municipal nas vias municipais, PRF na BR-259, PM e Detran nas operações de alcoolemia, com escala e comunicação comuns.</li>
+      </ul>
+      <h3>O que testar</h3>
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Teste</th><th>Técnica</th><th>Resultado esperado</th></tr></thead>
+          <tbody>
+            <tr><td>Posicionamento de equipes</td><td>Cobertura máxima (OR-Tools) sobre os pontos críticos, ponderada pelo horário</td><td>Mapa de posições por turno e % do risco coberto</td></tr>
+            <tr><td>Bloqueio policial (blitz)</td><td>Fechamento parcial de faixa + parada de uma fração dos veículos via TraCI</td><td>Fila gerada, desvios por ruas locais, local que menos atrapalha</td></tr>
+            <tr><td>Tempo de resposta a acidentes</td><td>Isócronas a partir das bases e das posições em ronda</td><td>Bairros descobertos e onde instalar base avançada</td></tr>
+            <tr><td>Rondas</td><td>Roteamento de veículos com janelas de tempo</td><td>Rotas diárias que passam pelos pontos críticos nos horários críticos</td></tr>
+            <tr><td>Exercício coordenado</td><td>Cenário de acidente grave na ponte: interdição, desvio, chegada de ambulância e equipes</td><td>Tempo até liberar o fluxo e chegada do socorro</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 13 -->
+    <section id="roteiro">
+      <h2><span class="n">13</span>Roteiro de execução</h2>
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Fase</th><th>Entrega</th><th>Ferramentas</th></tr></thead>
+          <tbody>
+            <tr><td>1. Protótipo</td><td>Centro + Ponte Florentino Avidos + trecho urbano da BR-259, gerado do OSM, com veículos animados em 3D</td><td>SUMO (osmWebWizard), deck.gl, Mapbox</td></tr>
+            <tr><td>2. Dados</td><td>Rede corrigida em campo, contagens nos picos, acidentes da PRF e locais georreferenciados</td><td>OSM, PostGIS, Python</td></tr>
+            <tr><td>3. Calibração</td><td>Cenário base que reproduz volumes e filas reais (GEH)</td><td>routeSampler, TraCI</td></tr>
+            <tr><td>4. Cenários</td><td>Terceira Ponte, zona 30, onda verde, separação de sentidos na BR-259</td><td>SUMO + painel Next.js</td></tr>
+            <tr><td>5. Índice</td><td>Pontuação comparando cenários, com relatório</td><td>Python + Next.js</td></tr>
+            <tr><td>6. Fiscalização</td><td>Otimização de equipes e app de campo</td><td>OR-Tools, Flutter</td></tr>
+            <tr><td>7. Expansão</td><td>Mais bairros, Colatina Verde, semáforos adaptativos</td><td>MATSim, SUMO-RL</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Parcerias que dão peso técnico: o campus do IFES em Colatina e a UNESC (pesquisa, contagens com estudantes, validação acadêmica), a própria comissão de revisão do PlanMob e o Detran-ES (dados do Observatório).</p>
+    </section>
+
+    <!-- 14 -->
+    <section id="trilha">
+      <h2><span class="n">14</span>Trilha de estudo</h2>
+      <p>Em ordem, do que destrava o protótipo ao que sustenta a entrega para a Prefeitura.</p>
+      <ol class="trilha">
+        <li><div><h4>Fundamentos de tráfego</h4><p>Diagrama fundamental, capacidade, nível de serviço, matriz O-D. Livro: <em>Traffic Flow Dynamics</em> (Treiber e Kesting), que também explica o IDM. Complementar: Manual de Estudos de Tráfego do DNIT.</p></div></li>
+        <li><div><h4>SUMO na prática</h4><p>Tutoriais oficiais: osmWebWizard, netconvert, rotas, TraCI em Python, dispositivos SSM e bluelight, saídas FCD e de detectores.</p></div></li>
+        <li><div><h4>Geoprocessamento</h4><p>Sistemas de coordenadas (WGS84, UTM 24S para Colatina, Web Mercator), PostGIS, OSMnx e GeoPandas.</p></div></li>
+        <li><div><h4>Visualização 3D</h4><p>Mapbox GL JS v3 (Standard, terreno, custom layers), deck.gl (TripsLayer, ScenegraphLayer, MapboxOverlay) e three.js (cena, câmera, InstancedMesh, glTF; o guia <em>Discover three.js</em> é um bom começo).</p></div></li>
+        <li><div><h4>Semáforos</h4><p>Manual Brasileiro de Sinalização de Trânsito, volume V (CONTRAN); método de Webster; coordenação e controle atuado.</p></div></li>
+        <li><div><h4>Segurança viária</h4><p>Plano Global da OMS 2021–2030 e o guia de gestão de velocidade da OMS; Sistema Seguro; publicações do WRI Brasil sobre desenho de ruas seguras; medidas substitutas (SSAM); Highway Safety Manual (Empirical Bayes).</p></div></li>
+        <li><div><h4>Estatística espacial e avaliação</h4><p>PySAL (Getis-Ord, Moran local), regressão à média, antes e depois com grupo de controle.</p></div></li>
+        <li><div><h4>Otimização</h4><p>OR-Tools: cobertura máxima, roteamento de veículos, escalas. Leitura sobre jogos de segurança (Stackelberg) para aleatorizar fiscalização.</p></div></li>
+        <li><div><h4>Legislação</h4><p>CTB (arts. 20, 21, 24, 29, 61 e o capítulo de infrações), Lei 13.022/2014, Resoluções CONTRAN 798/2020 e 996/2023, PNMU, PNATRANS, LGPD e o PlanMob de Colatina.</p></div></li>
+      </ol>
+    </section>
+
+    <!-- 15 -->
+    <section id="riscos">
+      <h2><span class="n">15</span>Riscos e cuidados</h2>
+      <ul>
+        <li><strong>Simulação não é previsão exata.</strong> Apresente intervalos e compare cenários entre si, sempre contra um base calibrado.</li>
+        <li><strong>Dados incompletos do OSM</strong> (faixas, semáforos, mão de direção) geram filas falsas. Conferência em campo é obrigatória.</li>
+        <li><strong>Calibração fraca derruba a credibilidade.</strong> Publique a metodologia e o GEH junto dos resultados.</li>
+        <li><strong>Custos de APIs</strong> (Mapbox, Google) crescem com o uso público. Tenha o MapLibre como plano B e cache de rotas.</li>
+        <li><strong>LGPD:</strong> anonimizar placas e rostos; guardar só o necessário; definir finalidade e prazo de retenção.</li>
+        <li><strong>Viés e equidade:</strong> otimizar só tempo de carro pode piorar a vida de quem anda a pé ou de ônibus, geralmente a população de menor renda. O índice já inclui pedestres e ciclistas por isso.</li>
+        <li><strong>Desempenho no navegador:</strong> milhares de veículos exigem instanciação (deck.gl, InstancedMesh) e trajetórias pré-calculadas, nunca a simulação inteira no cliente.</li>
+        <li><strong>Expectativa institucional:</strong> o simulador apoia a decisão técnica; não substitui estudo de engenharia assinado por profissional habilitado quando a norma exige.</li>
+      </ul>
+    </section>
+
+    <!-- 16 -->
+    <section id="fontes">
+      <h2><span class="n">16</span>Fontes</h2>
+      <ol class="fontes">
+        <li><a href="https://www.esfala.com.br/2026/07/01/veja-o-numero-de-mortes-no-transito-em-colatina-linhares-e-cidades-do-norte-do-es-em-2026/" target="_blank" rel="noopener">ES Fala, 01/07/2026: mortes no trânsito em Colatina, Linhares e cidades do Norte do ES em 2026</a></li>
+        <li><a href="https://www.esfala.com.br/2026/05/04/transito-ja-mata-mais-que-a-violencia-no-es-e-colatina-e-linhares-aparecem-entre-as-cidades-com-mais-mortes/" target="_blank" rel="noopener">ES Fala, 04/05/2026: trânsito já mata mais que a violência no ES</a></li>
+        <li><a href="https://www.esfala.com.br/2026/04/13/linhares-lidera-em-mortes-no-transito-no-es-colatina-e-a-2a-cidade-com-mais-obitos/" target="_blank" rel="noopener">ES Fala, 13/04/2026: Linhares lidera; Colatina é a 2ª cidade com mais óbitos</a></li>
+        <li><a href="https://www.esfala.com.br/2026/10/25/tragedia-na-br-259-em-colatina-motorista-bebado-e-sem-cnh-invade-contramao/" target="_blank" rel="noopener">ES Fala, 25/10/2026: motorista embriagado invade contramão na BR-259</a></li>
+        <li><a href="https://www.agazeta.com.br/es/transito/homem-morre-em-acidente-entre-carro-e-micro-onibus-na-br-259-em-colatina-1026" target="_blank" rel="noopener">A Gazeta: homem morre em batida entre carro e micro-ônibus na BR-259</a></li>
+        <li><a href="https://tribunaonline.com.br/policia/acidente-entre-caminhao-e-carro-deixa-duas-pessoas-mortas-em-colatina-316276" target="_blank" rel="noopener">Tribuna Online: acidente entre caminhão e carro deixa dois mortos em Colatina</a></li>
+        <li><a href="https://tribunanorteleste.com.br/jovem-morre-em-acidente-entre-carro-e-moto-na-br-259-em-colatina/" target="_blank" rel="noopener">Tribuna Norte Leste: jovem morre em acidente na BR-259</a></li>
+        <li><a href="https://www.es.gov.br/Noticia/governo-do-estado-anuncia-edital-de-licitacao-da-terceira-ponte-de-colatina" target="_blank" rel="noopener">Governo do ES: edital da Terceira Ponte de Colatina</a></li>
+        <li><a href="https://www.es.gov.br/Noticia/obra-da-terceira-ponte-de-colatina-tera-recursos-da-secretaria-de-recuperacao-do-rio-doce" target="_blank" rel="noopener">Governo do ES: recursos para a Terceira Ponte</a></li>
+        <li><a href="https://www.es.gov.br/Noticia/colatina-recebe-plano-de-mobilidade-urbana" target="_blank" rel="noopener">Governo do ES: Colatina recebe Plano de Mobilidade Urbana (2015)</a></li>
+        <li><a href="https://www.ibge.gov.br/cidades-e-estados/es/colatina.html" target="_blank" rel="noopener">IBGE Cidades: Colatina</a></li>
+        <li><a href="https://www.gov.br/transportes/pt-br/pt-br/assuntos/transito/conteudo-contran/resolucoes/resolucao7982020.pdf" target="_blank" rel="noopener">Resolução CONTRAN 798/2020</a></li>
+        <li><a href="https://urbes.com.br/uploads/RESOLUCAO_CONTRAN_996_23_BICICLETA_ELETRICA.pdf" target="_blank" rel="noopener">Resolução CONTRAN 996/2023</a></li>
+        <li><a href="https://aliancabike.org.br/wp-content/uploads/docs/2026/05/ACP_Autoprop_Final_Resumida.pdf" target="_blank" rel="noopener">Aliança Bike: ação civil pública sobre autopropelidos (2026)</a></li>
+        <li><a href="https://www.portaldotransito.com.br/noticias/fiscalizacao-e-legislacao/agente-de-transito/supremo-decide-que-guarda-municipal-pode-aplicar-multas-de-transito/" target="_blank" rel="noopener">Portal do Trânsito: STF decide que guarda municipal pode aplicar multas</a></li>
+        <li><a href="https://tesesesumulas.com.br/tese/stf/472" target="_blank" rel="noopener">STF, Tema 472 (tese)</a></li>
+        <li><a href="https://eclipse.dev/sumo/" target="_blank" rel="noopener">Eclipse SUMO: documentação</a></li>
+        <li><a href="https://docs.mapbox.com/mapbox-gl-js/" target="_blank" rel="noopener">Mapbox GL JS: documentação</a></li>
+        <li><a href="https://deck.gl/" target="_blank" rel="noopener">deck.gl: documentação</a></li>
+        <li><a href="https://threejs.org/docs/" target="_blank" rel="noopener">three.js: documentação</a></li>
+        <li><a href="https://www.who.int/teams/social-determinants-of-health/safety-and-mobility/decade-of-action-for-road-safety-2021-2030" target="_blank" rel="noopener">OMS: Década de Ação pela Segurança no Trânsito 2021–2030</a></li>
+      </ol>
+      <p class="fonte">Conceitos técnicos (modelos de tráfego, Webster, Nilsson, GEH, SSAM, Empirical Bayes) vêm da literatura clássica de engenharia de tráfego e não de uma fonte única; use a trilha de estudo para chegar às referências originais.</p>
+    </section>
+  </main>
+</div>
